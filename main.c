@@ -9,8 +9,7 @@
  *
  *  This is used in order to manage NB-IoT module directly through AT commands.
  *
- *  This code has been developed for Nordic Semiconductor nRF52840 DK and NB-IoT Arduino
- *  shield. Tested NB-IoT shileds: AVNET BG96 and Sodaq Sara N211.
+ *  This code has been developed for Nordic Semi nRF52840 DK and NB-IoT Arduino shield.
 */
 /***************************************************************************************/
 
@@ -39,8 +38,8 @@
 #define OP_QUEUES_SIZE          3
 #define APP_TIMER_PRESCALER     NRF_SERIAL_APP_TIMER_PRESCALER
 
-#define SERIAL_FIFO_TX_SIZE 32
-#define SERIAL_FIFO_RX_SIZE 32
+#define SERIAL_FIFO_TX_SIZE 512
+#define SERIAL_FIFO_RX_SIZE 512
 
 #define SERIAL_BUFF_TX_SIZE 1
 #define SERIAL_BUFF_RX_SIZE 1
@@ -138,8 +137,27 @@ int main(void)
     timers_init();
     serial_init();
 
+    char charFromSerial0;
+    char charFromSerial1;
+    size_t countFromSerial0;
+    size_t countFromSerial1;
+
     while (true)
     {
+        nrf_serial_read(&serial0_uarte, &charFromSerial0, sizeof(charFromSerial0), &countFromSerial0, 10);
+        while ( countFromSerial0!= 0)
+        {
+            nrf_serial_write(&serial1_uarte, &charFromSerial0, sizeof(charFromSerial0), NULL, 0);
+            nrf_serial_flush(&serial1_uarte, 0);
+            nrf_serial_read(&serial0_uarte, &charFromSerial0, sizeof(charFromSerial0), &countFromSerial0, 0);
+        }
 
+        nrf_serial_read(&serial1_uarte, &charFromSerial1, sizeof(charFromSerial1), &countFromSerial1, 10);
+        while (countFromSerial1 != 0)
+        {
+            nrf_serial_write(&serial0_uarte, &charFromSerial1, sizeof(charFromSerial1), NULL, 0);
+            nrf_serial_flush(&serial0_uarte, 0);
+            nrf_serial_read(&serial1_uarte, &charFromSerial1, sizeof(charFromSerial1), &countFromSerial1, 0);
+        }
     }
 }
