@@ -1,7 +1,7 @@
 /***************************************************************************************/
 /*
  * nRF52840-AT_terminal
- * Created by Manuel Montenegro, Mar 14, 2019.
+ * Created by Manuel Montenegro, Mar 19, 2019.
  * Developed for MOTAM project.
  *
  *  This application stablish a bypass connection between USB UART and Arduino serial 
@@ -56,13 +56,13 @@ static void sleep_handler(void)
 NRF_SERIAL_DRV_UART_CONFIG_DEF(m_uarte0_drv_config,
                       RX_PIN_NUMBER, TX_PIN_NUMBER,
                       RTS_PIN_NUMBER, CTS_PIN_NUMBER,
-                      NRF_UART_HWFC_DISABLED, NRF_UART_PARITY_EXCLUDED,
+                      NRF_UART_HWFC_ENABLED, NRF_UART_PARITY_EXCLUDED,
                       NRF_UART_BAUDRATE_115200,
                       UART_DEFAULT_CONFIG_IRQ_PRIORITY);
 
 NRF_SERIAL_DRV_UART_CONFIG_DEF(m_uarte1_drv_config,
                       ARDUINO_RX_PIN, ARDUINO_TX_PIN,
-                      RTS_PIN_NUMBER, CTS_PIN_NUMBER,
+                      NULL, NULL,
                       NRF_UART_HWFC_DISABLED, NRF_UART_PARITY_EXCLUDED,
                       NRF_UART_BAUDRATE_115200,
                       UART_DEFAULT_CONFIG_IRQ_PRIORITY);
